@@ -10,17 +10,17 @@
 <body ng-controller="agendaController" scroll>
 	<h1>Infinite Agenda</h1>
 	<div class="agenda-container">
-		<div class="day-row" ng-repeat="day in days" ng-click="dayClick(day)">
+		<div class="day-row" ng-repeat="day in days" ng-click="dayClick(day)" ng-controller="dayController" >
 			<div class="day-header" ng-bind="day.date | date"></div>
 			<div class="day-contents" ng-class="{activeRow : day.formOpen}">
 				<ul class="day-contents-events">
-					<li ng-repeat="event in day.events | orderBy:'time'" ng-if="!event.editing" ng-click="cancelBubble(dayClick(day));editEntry(day,event,$index)">{{event.time | date : 'shortTime'}} -- {{event.desc}}</li>
+					<li ng-repeat="event in day.events | orderBy:'time'" ng-if="!event.editing" ng-click="$event.stopPropagation();editEntry(day,event,$index);day.formOpen = true;">{{event.time | date : 'shortTime'}} -- {{event.desc}}</li>
 					<form class="entry-form" ng-if="day.formOpen">
-						<input class="time" type="time" placeholder="HH:mm:ss" ng-model="entryForm.time"></input>
-						<input class="desc" type="text" placeholder="Enter event description" ng-model="entryForm.desc"></input>
-						<input class="save-button" type="button" value="Save" ng-click="cancelBubble(dayClick(day));saveForm(day); day.formOpen = false"></input>
-						<input class="cancel-button" type="button" value="Cancel" ng-click="cancelBubble(dayClick(day));clearForm(day)"></input>
-						<input class="delete-button" type="button" value="Delete" ng-click="cancelBubble(dayClick(day));deleteEntry(day,$index); day.formOpen = false;"></input>
+						<input class="time" type="time" placeholder="HH:mm:ss" ng-model="entryForm.time" ng-click="$event.stopPropagation()"></input>
+						<input class="desc" type="text" placeholder="Enter event description" ng-model="entryForm.desc" ng-click="$event.stopPropagation()"></input>
+						<input class="save-button" type="button" value="Save" ng-click="$event.stopPropagation();saveButtonClick(day)"></input>
+						<input class="cancel-button" type="button" value="Cancel" ng-click="$event.stopPropagation();cancelButtonClick(day)"></input>
+						<input class="delete-button" type="button" value="Delete" ng-click="$event.stopPropagation();deleteEntry(day,$index);clearForm(); day.formOpen = false;"></input>
 					</form>
 				</ul>
 			</div>
