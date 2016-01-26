@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<title>Infinite Agenda</title>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+	<script type="text/javascript" src="infinite-agenda.js"></script>
+</head>
+<body ng-controller="agendaController" scroll>
+	<h1>Infinite Agenda</h1>
+	<div class="agenda-container">
+		<div class="day-row" ng-repeat="day in days" ng-click="dayClick(day)">
+			<div class="day-header" ng-bind="day.date | date"></div>
+			<div class="day-contents" ng-class="{activeRow : day.formOpen}">
+				<ul class="day-contents-events">
+					<li ng-repeat="event in day.events | orderBy:'time'" ng-if="!event.editing" ng-click="cancelBubble(dayClick(day));editEntry(day,event,$index)">{{event.time | date : 'shortTime'}} -- {{event.desc}}</li>
+					<form class="entry-form" ng-if="day.formOpen">
+						<input class="time" type="time" placeholder="HH:mm:ss" ng-model="entryForm.time"></input>
+						<input class="desc" type="text" placeholder="Enter event description" ng-model="entryForm.desc"></input>
+						<input class="save-button" type="button" value="Save" ng-click="cancelBubble(dayClick(day));saveForm(day); day.formOpen = false"></input>
+						<input class="cancel-button" type="button" value="Cancel" ng-click="cancelBubble(dayClick(day));clearForm(day)"></input>
+						<input class="delete-button" type="button" value="Delete" ng-click="cancelBubble(dayClick(day));deleteEntry(day,$index); day.formOpen = false;"></input>
+					</form>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
